@@ -1,15 +1,14 @@
-﻿using DAL.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Exceptions;
 
 namespace DAL.FileConverters
 {
-    public class TextFileFormatConverter<T> : IConverter<T> where T : new()
+    public class TextFileFormatConverter<T> : IConverter<T> where T :Domains.BaseEntity , new()
     {
         public string ConvertData(List<T> data)
         {
@@ -113,9 +112,9 @@ namespace DAL.FileConverters
 
                 return items;
             }
-            catch (Exception ex)
+            catch (SerializationException ex)
             {
-                throw new SerializationException("Error parsing text file content.", ex);
+                throw new SerializationException("Error parsing text file content.", "", ex);
             }
         }
     }

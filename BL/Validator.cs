@@ -15,7 +15,10 @@ namespace BL
     {
         public bool Validate(T model)
         {
-            if (model == null || model.Id <= 0)
+            if (model == null)
+                return false;
+
+            if (model.Id <= 0)
                 return false;
             Type myType = typeof(T);
             var properties = myType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -66,13 +69,13 @@ namespace BL
                 {
                     var str = (string)value;
                     //Min
-                    var minLen = prop.GetCustomAttribute<MinLengthAttribute>();
-                    if (minLen == null || str.Length < minLen.Length)
+                    var customMinAttr = prop.GetCustomAttribute<Domains.CustomeAttributes.MinLengthAttribute>();
+                    if (customMinAttr == null || str.Length < customMinAttr.Length)
                         return false;
 
                     //Max
-                    var maxLen = prop.GetCustomAttribute<MaxLengthAttribute>();
-                    if (maxLen == null || str.Length > maxLen.Length)
+                    var customMaxAttr = prop.GetCustomAttribute<Domains.CustomeAttributes.MaxLengthAttribute>();
+                    if (customMaxAttr != null && str.Length > customMaxAttr.Length)
                         return false;
 
                     //Email

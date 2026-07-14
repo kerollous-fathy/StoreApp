@@ -14,10 +14,14 @@ namespace Domains
         [Required]
         public int CustomerId { get; set; }
         [Required]
+        [MinLength(5)]
+        [MaxLength(100)]
         public string CustomerName { get; set; }
         [Required]
         public int ItemId { get; set; }
         [Required]
+        [MaxLength(100)]
+        [MinLength(1)]
         public string ItemName { get; set; }
         [Required]
         [Range(10, 500)]

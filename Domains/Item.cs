@@ -11,7 +11,8 @@ namespace DAL
     public class Item : BaseEntity
     {
         [Required]
-        [MaxLength(50)]
+        [MaxLength(100)]
+        [MinLength(1)]
         public string Name { get; set; }
         [Required]
         [Range(10 , 500)]

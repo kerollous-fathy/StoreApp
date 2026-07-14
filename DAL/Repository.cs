@@ -1,5 +1,4 @@
-﻿using DAL.Contracts;
-using DAL.Exceptions;
+﻿using DAL.Exceptions;
 using Domains;
 using System;
 using System.Collections.Generic;
@@ -28,9 +27,13 @@ namespace DAL
                 var items = _itemConverter.ConvertBack(await FileHelper.ReadAll(FileName));
                 return items;
             }
+            catch (SerializationException eex)
+            {
+                return new List<T>();
+            }
             catch (Exception ex)
             {
-                throw new DataAccessException("Error reading items from data source.","item now is null", ex);
+                throw new DataAccessException("Error reading items from data source.", "list is now null", ex);
             }
         }
 
@@ -45,6 +48,10 @@ namespace DAL
                 else
                     return item;
             }
+            catch (SerializationException ex)
+            {
+                return new T();
+            }
             catch (Exception ex)
             {
                 throw new DataAccessException($"Error reading item with is {id} from data source.", "item now is null", ex);
@@ -56,8 +63,10 @@ namespace DAL
             try
             {
                 var items = await GetAll();
+                items.Add(model);
                 var ItemString = _itemConverter.ConvertData(items);
-                await FileHelper.Append(FileName, ItemString);
+
+                await FileHelper.Create(FileName, ItemString);
             }
             catch (Exception ex)
             {
@@ -70,7 +79,7 @@ namespace DAL
             try
             {
                 var items = await GetAll();
-                var existingItem = await GetById(model.Id);
+                var existingItem = items.Where(a => a.Id == model.Id).FirstOrDefault();
                 if (existingItem != null)
                 {
                     items.Remove(existingItem);
@@ -92,11 +101,11 @@ namespace DAL
                 //get all items
                 var items = await GetAll();
                 //get item by id
-                var deletedItem = await GetById(id);
+                var itemToRemove = items.FirstOrDefault(x => x.Id == id);
                 //remove item
-                if (deletedItem != null)
+                if (itemToRemove != null)
                 {
-                    items.Remove(deletedItem);
+                    items.Remove(itemToRemove);
                 }
                 //save all back
                 var itemString = _itemConverter.ConvertData(items);

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DAL.FileConverters;
 using DAL.Exceptions;
@@ -15,13 +14,14 @@ using System.Text.RegularExpressions;
 
 namespace BL
 {
-    public class BusinessLayer<T> : IBusiness<T> where T : BaseEntity, new()
+    public class BusinessLayer<T> : IBusiness<T> where T : Domains.BaseEntity, new()
     {
-        IRepository<T> _repo;
-        public BusinessLayer(IRepository<T> repo)
-        {
-            _repo = repo;
-        }
+        IRepository<T> _repo = new Repository<T>(new JsonConverter<T>());
+
+        //public BusinessLayer(IRepository<T> repo)
+        //{
+        //    _repo = repo;
+        //}
         public async Task Add(T model)
         {
             try
@@ -56,6 +56,10 @@ namespace BL
                 if (items == null)
                     throw new NotFoundException("", "");
                 return items;
+            }
+            catch (SerializationException)
+            {
+                return new List<T>();
             }
             catch (DataAccessException ex)
             {

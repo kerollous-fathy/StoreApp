@@ -1,10 +1,12 @@
-﻿namespace StoreApp
+﻿
+namespace StoreApp
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            StoreConsoleApp oStore = new StoreConsoleApp();
+            await oStore.RunAsync();
         }
     }
 }

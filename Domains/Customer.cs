@@ -15,9 +15,13 @@ namespace Domains
         public string CustomerName { get; set; }
         [Required]
         [Email]
+        [MinLength(5)]
+        [MaxLength(100)]
         public string CustomerEmail { get; set; }
         [Required]
-        [Phone(12)]
+        [Phone(11)]
+        [MinLength(5)]
+        [MaxLength(100)]
         public string Phone { get; set; }
     }
 }
