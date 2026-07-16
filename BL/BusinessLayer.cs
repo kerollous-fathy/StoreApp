@@ -16,12 +16,20 @@ namespace BL
 {
     public class BusinessLayer<T> : IBusiness<T> where T : Domains.BaseEntity, new()
     {
-        IRepository<T> _repo = new Repository<T>(new JsonConverter<T>());
+        IRepository<T> _repo;
 
-        //public BusinessLayer(IRepository<T> repo)
-        //{
-        //    _repo = repo;
-        //}
+        public BusinessLayer(StorageType type)
+        {
+            switch (type)
+            {
+                case StorageType.JsonFile:
+                    _repo = new Repository<T>(new JsonConverter<T>());
+                    break;
+                case StorageType.TextFile:
+                    _repo = new Repository<T>(new TextFileFormatConverter<T>());
+                    break;
+            }
+        }
         public async Task Add(T model)
         {
             try

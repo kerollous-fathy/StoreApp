@@ -17,9 +17,11 @@ namespace StoreApp
 
         public StoreConsoleApp()
         {
-            var itemBL = new BusinessLayer<Item>();
-            var customerBL = new BusinessLayer<Customer>();
-            var orderBL = new BusinessLayer<Order>();
+
+            DAL.StorageType storageType = DAL.StorageType.JsonFile;
+            var itemBL = new BusinessLayer<Item>(storageType);
+            var customerBL = new BusinessLayer<Customer>(storageType);
+            var orderBL = new BusinessLayer<Order>(storageType);
 
             _itemMenu = new ItemMenu(itemBL);
             _customerMenu = new CustomerMenu(customerBL);
